@@ -1,6 +1,6 @@
-# Ruby Starter
+# Ruby Data Structures
 
-A starter kit for writing code and [tests](https://github.com/seattlerb/minitest#label-Specs) in ruby.
+A playground for exploring [data structures in ruby](https://www.rubyguides.com/2019/04/ruby-data-structures/)!
 
 #### Dependencies
 * docker
