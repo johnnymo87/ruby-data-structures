@@ -41,16 +41,14 @@ class LinkedList
     popped.value
   end
 
-  def find(value = nil, &blk)
-    if block_given?
-      to_enum.find(&blk)
-    else
-      to_enum.find { |n| n.value == value }
-    end
-  end
+  # Include Enumerable and implement #each so to automatically
+  # have all of its methods
+  # NB: Mine is lazy!
+  # https://blog.appsignal.com/2018/05/29/ruby-magic-enumerable-and-enumerator.html
+  include Enumerable
 
-  def to_a
-    to_enum.map(&:value).force
+  def each(&blk)
+    block_given? ? to_enum.each(&blk) : to_enum
   end
 
   private
