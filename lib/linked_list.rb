@@ -41,6 +41,15 @@ class LinkedList
     popped.value
   end
 
+  def delete(value)
+    return pop if head.value == value
+
+    each_cons(3) do |a,b,c|
+      b.next = nil if c.value == value
+      a.next = c if b.value == value
+    end
+  end
+
   # Include Enumerable and implement #each so to automatically
   # have all of its methods
   # NB: Mine is lazy!

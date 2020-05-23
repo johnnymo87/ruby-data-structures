@@ -53,4 +53,55 @@ describe LinkedList do
       )
     end
   end
+
+  describe '#delete' do
+    before do
+      @list = (0..9).each_with_object(LinkedList.new) do |v, l|
+        l.push(v)
+      end
+    end
+
+    it 'can delete the first item of the list' do
+      @list.delete(9)
+      @list.map(&:value).must_equal(
+        (0..9).to_a.reverse - [9]
+      )
+    end
+
+    it 'can delete the second item of the list' do
+      @list.delete(8)
+      @list.map(&:value).must_equal(
+        (0..9).to_a.reverse - [8]
+      )
+    end
+
+    it 'can delete the third item of the list' do
+      @list.delete(7)
+      @list.map(&:value).must_equal(
+        (0..9).to_a.reverse - [7]
+      )
+    end
+
+    it 'can delete the fourth item of the list' do
+      @list.delete(6)
+      @list.map(&:value).must_equal(
+        (0..9).to_a.reverse - [6]
+      )
+    end
+
+    it 'can delete the last item of the list' do
+      @list.delete(0)
+      @list.map(&:value).must_equal(
+        (0..9).to_a.reverse - [0]
+      )
+    end
+
+    it 'does nothing if it does not exist' do
+      @list.delete(-1)
+
+      @list.map(&:value).must_equal(
+        (0..9).to_a.reverse
+      )
+    end
+  end
 end
