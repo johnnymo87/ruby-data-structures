@@ -5,6 +5,8 @@ describe BinaryTree do
   before { @numbers = [9, 4, 12, 15, 72, 21, 36, 2, 10, 14, 8, 19] }
 
   #                                9
+  #                              /   \
+  #                             /     \
   #                            /       \
   #                          4          12
   #                         /  \       /  \
@@ -15,6 +17,11 @@ describe BinaryTree do
   #                                        21
   #                                       /  \
   #                                     19    36
+
+
+  #     [9  , 4 , 2 , 8 , 12 , 10 , 15 , 14 , 72 , 21 , 19 , 36]
+  #     [6  , 2 , 1 , 1 , 4  , 1  , 3  , 1  , 2  , 2  , 1  , 1]
+  #     [-2 , 0 , 0 , 0 , -2 , 0  , -1 , 0  , 2  , 0  , 0  , 0]
 
   describe 'creating a tree' do
     describe '#insert' do
@@ -47,15 +54,29 @@ describe BinaryTree do
 
     describe '#breadth_first_traverse' do
       it 'works' do
-        traversed = @root.breadth_first_traverse
+        traversed = @root.breadth_first_traverse.map(&:value)
         traversed.must_equal([9, 4, 12, 2, 8, 10, 15, 14, 72, 21, 19, 36])
       end
     end
 
     describe '#depth_first_traverse' do
       it 'works' do
-        traversed = @root.depth_first_traverse
+        traversed = @root.depth_first_traverse.map(&:value)
         traversed.must_equal([9, 4, 2, 8, 12, 10, 15, 14, 72, 21, 19, 36])
+      end
+    end
+
+    describe '#weight' do
+      it 'counts the number of leaves in descendants' do
+        weights = @root.depth_first_traverse.map(&:weight)
+        weights.must_equal([6, 2, 1, 1, 4, 1, 3, 1, 2, 2, 1, 1])
+      end
+    end
+
+    describe '#level_of_imbalance' do
+      it 'works' do
+        levels = @root.depth_first_traverse.map(&:level_of_imbalance)
+        levels.must_equal([-2, 0, 0, 0, -2, 0, -1, 0, 2, 0, 0, 0])
       end
     end
   end

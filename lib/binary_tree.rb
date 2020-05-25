@@ -17,7 +17,7 @@ module BinaryTree
     end
 
     def breadth_first_traverse(queue = [], seen = [])
-      seen << value
+      seen << self
       queue << left if left
       queue << right if right
       to_see = queue.shift
@@ -25,12 +25,37 @@ module BinaryTree
     end
 
     def depth_first_traverse(stack = [], seen = [])
-      seen << value
+      seen << self
       stack.push(right) if right
       stack.push(left) if left
       to_see = stack.pop
       to_see ? to_see.depth_first_traverse(stack, seen) : seen
     end
+
+    def weight
+      leaf? ? 1 : (left_weight + right_weight)
+    end
+
+    def level_of_imbalance
+      left_weight - right_weight
+    end
+
+    def balanced?
+      -1 <= level_of_imbalance && level_of_imbalance <= 1
+    end
+
+    private
+
+    def left_weight
+      left&.weight || 0
+    end
+
+    def right_weight
+      right&.weight || 0
+    end
+
+    def leaf?
+      !(left || right)
+    end
   end
 end
-
