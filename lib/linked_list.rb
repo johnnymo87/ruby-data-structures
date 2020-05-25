@@ -1,17 +1,4 @@
-# https://www.rubyguides.com/2017/08/ruby-linked-list/
-
-class Node
-  attr_reader :value
-  attr_accessor :next
-
-  def initialize(value)
-    @value = value
-  end
-end
-
-
 # https://robots.thoughtbot.com/functional-ciphers-in-ruby
-
 # Iterate :: a -> (a -> a) -> [a]
 module Iterate
   def self.call(x, &block)
@@ -24,6 +11,7 @@ module Iterate
   end
 end
 
+# https://www.rubyguides.com/2017/08/ruby-linked-list/
 class LinkedList
   def initialize(head = nil)
     @head = head
@@ -66,5 +54,14 @@ class LinkedList
 
   def to_enum
     Iterate.call(head) { |n| n&.next }.take_while(&:itself)
+  end
+
+  class Node
+    attr_reader :value
+    attr_accessor :next
+
+    def initialize(value)
+      @value = value
+    end
   end
 end
