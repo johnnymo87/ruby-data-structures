@@ -105,3 +105,23 @@ describe LinkedList do
     end
   end
 end
+
+describe DoublyLinkedList do
+  before do
+    @numbers = [4, 6, 7, 7, 2, 4, 3, 9, 9, 6]
+    parent_value, *children_values = @numbers
+    @list = children_values.reduce(
+      DoublyLinkedList.new(value: parent_value)
+    ) do |parent, child_value|
+      parent << child_value
+    end
+  end
+
+  describe '#to_a' do
+    it 'works' do
+      @list.to_a.map(&:value).must_equal(
+        @numbers
+      )
+    end
+  end
+end

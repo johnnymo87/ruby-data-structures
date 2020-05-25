@@ -65,3 +65,32 @@ class LinkedList
     end
   end
 end
+
+class DoublyLinkedList
+  attr_reader :value
+  attr_accessor :child
+  attr_accessor :parent
+
+  def initialize(value:, parent: nil)
+    @value = value
+    @parent = parent
+  end
+
+  include Enumerable
+
+  def each
+    n = self
+    while n
+      yield n
+      n = n.parent
+    end
+  end
+
+  def to_a
+    super.reverse
+  end
+
+  def <<(value)
+    self.child = self.class.new(value: value, parent: self)
+  end
+end
