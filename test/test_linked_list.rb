@@ -1,34 +1,28 @@
 require 'minitest/autorun'
 require 'linked_list'
 
-describe LinkedList do
-  describe '#push' do
-    it 'adds data' do
-      (0..9).each_with_object(LinkedList.new) do |v, l|
-        l.push(v)
-      end.map(&:value).must_equal(
-        (0..9).to_a.reverse
+describe SinglyLinkedList do
+  describe '#from_a' do
+    it 'builds a list in the same "direction"' do
+      SinglyLinkedList.from_a((0..9).to_a).map(&:value).must_equal(
+        (0..9).to_a
       )
     end
   end
 
-  describe '#pop' do
-    it 'removes the data last added' do
-      list = (0..9).each_with_object(LinkedList.new) do |v, l|
-        l.push(v)
-      end
-      list.pop.must_equal(9)
-      list.map(&:value).must_equal(
-        (0..8).to_a.reverse
-      )
+  describe '#reverse' do
+    before do
+      @list = SinglyLinkedList.from_a((0..9).to_a)
+    end
+
+    it 'reverses' do
+      @list.reverse.map(&:value).must_equal((0..9).to_a.reverse)
     end
   end
 
   describe '#find' do
     before do
-      @list = (0..9).each_with_object(LinkedList.new) do |v, l|
-        l.push(v)
-      end
+      @list = SinglyLinkedList.from_a((0..9).to_a)
     end
 
     it 'returns the value if it exists' do
@@ -42,65 +36,50 @@ describe LinkedList do
 
   describe 'chaining enumerable methods' do
     before do
-      @list = (0..9).each_with_object(LinkedList.new) do |v, l|
-        l.push(v)
-      end
+      @list = SinglyLinkedList.from_a((0..9).to_a)
     end
 
     it 'works' do
       @list.select { |n| n.value.odd? }.map(&:value).must_equal(
-        (0..9).select(&:odd?).reverse
+        (0..9).select(&:odd?)
       )
     end
   end
 
   describe '#delete' do
     before do
-      @list = (0..9).each_with_object(LinkedList.new) do |v, l|
-        l.push(v)
-      end
+      @list = SinglyLinkedList.from_a((0..9).to_a)
     end
 
     it 'can delete the first item of the list' do
-      @list.delete(9)
-      @list.map(&:value).must_equal(
-        (0..9).to_a.reverse - [9]
-      )
-    end
-
-    it 'can delete the second item of the list' do
-      @list.delete(8)
-      @list.map(&:value).must_equal(
-        (0..9).to_a.reverse - [8]
-      )
-    end
-
-    it 'can delete the third item of the list' do
-      @list.delete(7)
-      @list.map(&:value).must_equal(
-        (0..9).to_a.reverse - [7]
-      )
-    end
-
-    it 'can delete the fourth item of the list' do
-      @list.delete(6)
-      @list.map(&:value).must_equal(
-        (0..9).to_a.reverse - [6]
+      @list.delete(0).map(&:value).must_equal(
+        (0..9).to_a - [0]
       )
     end
 
     it 'can delete the last item of the list' do
-      @list.delete(0)
-      @list.map(&:value).must_equal(
-        (0..9).to_a.reverse - [0]
+      @list.delete(9).map(&:value).must_equal(
+        (0..9).to_a - [9]
+      )
+    end
+
+    it 'can delete an item in the middle of the list' do
+      @list.delete(5).map(&:value).must_equal(
+        (0..9).to_a - [5]
       )
     end
 
     it 'does nothing if it does not exist' do
-      @list.delete(-1)
+      @list.delete(-1).map(&:value).must_equal(
+        (0..9).to_a
+      )
+    end
 
-      @list.map(&:value).must_equal(
-        (0..9).to_a.reverse
+    it 'removes only the first match from the list' do
+      SinglyLinkedList.from_a(
+        [4,5,4,5,4,5]
+      ).delete(5).map(&:value).must_equal(
+        [4,4,5,4,5]
       )
     end
   end

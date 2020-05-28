@@ -1,68 +1,59 @@
-# https://robots.thoughtbot.com/functional-ciphers-in-ruby
-# Iterate :: a -> (a -> a) -> [a]
-module Iterate
-  def self.call(x, &block)
-    Enumerator.new do |yielder|
-      loop do
-        yielder.yield(x)
-        x = block.call(x)
-      end
-    end.lazy
-  end
-end
+class SinglyLinkedList
+  attr_accessor :value, :tail
 
-# https://www.rubyguides.com/2017/08/ruby-linked-list/
-class LinkedList
-  def initialize(head = nil)
-    @head = head
+  def initialize(value:, tail: nil)
+    self.value = value
+    self.tail = tail
   end
 
-  def push(value)
-    new_node = Node.new(value)
-    new_node.next = head
-    self.head = new_node
+  def tail=(value)
+    @tail = self.class.from(value)
   end
 
-  def pop
-    popped = head
-    self.head = popped.next
-    popped.value
-  end
-
-  def delete(value)
-    return pop if head.value == value
-
-    each_cons(3) do |a,b,c|
-      b.next = nil if c.value == value
-      a.next = c if b.value == value
-    end
-  end
-
-  # Include Enumerable and implement #each so to automatically
-  # have all of its methods
-  # NB: Mine is lazy!
-  # https://blog.appsignal.com/2018/05/29/ruby-magic-enumerable-and-enumerator.html
   include Enumerable
 
-  def each(&blk)
-    block_given? ? to_enum.each(&blk) : to_enum
-  end
-
-  private
-
-  attr_accessor :head
-
-  def to_enum
-    Iterate.call(head) { |n| n&.next }.take_while(&:itself)
-  end
-
-  class Node
-    attr_reader :value
-    attr_accessor :next
-
-    def initialize(value)
-      @value = value
+  def each
+    n = self
+    while n
+      yield n
+      n = n.tail
     end
+    n
+  end
+
+  # from (HEAD) 1 -> 2 -> 3 -> 4 -> 5 -> 6
+  # to   (HEAD) 6 -> 5 -> 4 -> 3 -> 2 -> 1
+  def reverse
+    reduce(nil) do |left, right|
+      self.class.new(value: right.value, tail: left)
+    end
+  end
+
+  def delete(given_value)
+    if value == given_value
+      tail
+    else
+      self.tail = tail&.delete(given_value)
+      self
+    end
+  end
+
+  def self.from(x)
+    return nil if x.nil?
+    return x if x.class == self
+
+    new(value: x)
+  end
+
+  # from     [  1 ,  2 ,  3 ,  4 ,  5 ,  6 ]
+  # to   (HEAD) 1 -> 2 -> 3 -> 4 -> 5 -> 6
+  def self.from_a(array)
+    return unless array.any?
+
+    head, *tail = array
+    node_head = new(value: head)
+    tail.reduce(node_head, &:tail=)
+    node_head
   end
 end
 
