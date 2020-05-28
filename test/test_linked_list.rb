@@ -92,7 +92,7 @@ describe DoublyLinkedList do
     @list = children_values.reduce(
       DoublyLinkedList.new(value: parent_value)
     ) do |parent, child_value|
-      parent << child_value
+      parent.prepend(child_value)
     end
   end
 

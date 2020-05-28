@@ -81,7 +81,7 @@ class DoublyLinkedList
     super.reverse
   end
 
-  def <<(value)
+  def prepend(value)
     self.child = self.class.new(value: value, parent: self)
   end
 end
